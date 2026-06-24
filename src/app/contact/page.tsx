@@ -5,7 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Send, CheckCircle2 } from "lucide-react";
+import { Github, Linkedin, Mail, Send, CheckCircle2, Twitter } from "lucide-react";
+import { socialLinks } from "@/lib/constants";
+
+const iconMap = {
+  github: Github,
+  linkedin: Linkedin,
+  twitter: Twitter,
+  mail: Mail,
+};
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,28 +47,29 @@ export default function ContactPage() {
           {/* Contact Info */}
           <div className="space-y-8">
             <p className="text-muted-foreground text-lg">
-              Vous avez un projet en tête ou vous souhaitez simplement dire bonjour ? N'hésitez pas à me contacter via le formulaire ou sur les réseaux sociaux.
+              Vous avez un projet en tête ou vous souhaitez simplement dire bonjour ? N&apos;hésitez pas à me contacter via le formulaire ou sur les réseaux sociaux.
             </p>
             
             <div className="space-y-4">
-              <a href="mailto:hello@example.com" className="flex items-center gap-4 text-foreground hover:text-primary transition-colors">
-                <div className="p-3 bg-secondary rounded-full">
-                  <Mail className="h-6 w-6" />
-                </div>
-                <span className="font-medium">andyharivola@gmail.com</span>
-              </a>
-              <a href="https://www.linkedin.com/in/harivola-andy-randriamangamparany" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-foreground hover:text-primary transition-colors">
-                <div className="p-3 bg-secondary rounded-full">
-                  <Linkedin className="h-6 w-6" />
-                </div>
-                <span className="font-medium">LinkedIn</span>
-              </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-foreground hover:text-primary transition-colors">
-                <div className="p-3 bg-secondary rounded-full">
-                  <Github className="h-6 w-6" />
-                </div>
-                <span className="font-medium">GitHub</span>
-              </a>
+              {socialLinks.map((link) => {
+                const Icon = iconMap[link.icon as keyof typeof iconMap];
+                const displayLabel = link.icon === 'mail' ? link.url.replace('mailto:', '') : link.name;
+
+                return (
+                  <a
+                    key={link.name}
+                    href={link.url}
+                    target={link.icon === 'mail' ? undefined : "_blank"}
+                    rel={link.icon === 'mail' ? undefined : "noopener noreferrer"}
+                    className="flex items-center gap-4 text-foreground hover:text-primary transition-colors"
+                  >
+                    <div className="p-3 bg-secondary rounded-full">
+                      {Icon && <Icon className="h-6 w-6" />}
+                    </div>
+                    <span className="font-medium">{displayLabel}</span>
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -77,7 +86,7 @@ export default function ContactPage() {
                 </div>
                 <h3 className="text-xl font-semibold">Message envoyé !</h3>
                 <p className="text-muted-foreground">
-                  Merci de m'avoir contacté. Je vous répondrai dans les plus brefs délais.
+                  Merci de m&apos;avoir contacté. Je vous répondrai dans les plus brefs délais.
                 </p>
                 <Button variant="outline" onClick={() => setIsSuccess(false)}>
                   Envoyer un autre message
@@ -94,6 +103,7 @@ export default function ContactPage() {
                     id="name"
                     placeholder="Votre nom"
                     required
+                    minLength={2}
                     disabled={isSubmitting}
                   />
                 </div>
@@ -115,9 +125,10 @@ export default function ContactPage() {
                   </label>
                   <Textarea
                     id="message"
-                    placeholder="Votre message..."
+                    placeholder="Votre message (minimum 10 caractères)..."
                     className="min-h-[120px] resize-y"
                     required
+                    minLength={10}
                     disabled={isSubmitting}
                   />
                 </div>

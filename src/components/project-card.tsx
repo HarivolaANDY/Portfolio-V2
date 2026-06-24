@@ -27,6 +27,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
             src={project.image}
             alt={project.title}
             fill
+            priority={index < 2}
             className="object-cover transition-transform duration-300 group-hover:scale-105 p-8"
           />
           <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center">

@@ -7,13 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
-
-const navItems = [
-  { name: "Accueil", path: "/" },
-  { name: "Projets", path: "/projects" },
-  { name: "À propos", path: "/about" },
-  { name: "Contact", path: "/contact" },
-];
+import { navItems } from "@/lib/constants";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
