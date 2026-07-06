@@ -1,5 +1,3 @@
-"use client";
-
 import { ProjectCard } from "@/components/project-card";
 import { PROJECTS } from "@/lib/constants";
 
