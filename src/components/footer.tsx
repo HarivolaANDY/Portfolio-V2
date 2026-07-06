@@ -1,12 +1,4 @@
-import { Github, Linkedin, Twitter, Mail } from "lucide-react";
-import { socialLinks } from "@/lib/constants";
-
-const iconMap = {
-  github: Github,
-  linkedin: Linkedin,
-  twitter: Twitter,
-  mail: Mail,
-};
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 export function Footer() {
   return (
@@ -15,9 +7,9 @@ export function Footer() {
         <p className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} Mon Portfolio. Tous droits réservés.
         </p>
-        <div className="flex gap-4">
-          {socialLinks.map((link) => {
-            const Icon = iconMap[link.icon as keyof typeof iconMap];
+        <div className="flex gap-6">
+          {SOCIAL_LINKS.map((link) => {
+            const Icon = link.icon;
             return (
               <a
                 key={link.name}
@@ -26,7 +18,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
-                {Icon && <Icon className="h-5 w-5" />}
+                <Icon className="h-5 w-5" />
                 <span className="sr-only">{link.name}</span>
               </a>
             );

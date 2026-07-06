@@ -5,22 +5,48 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Send, CheckCircle2, Twitter } from "lucide-react";
-import { socialLinks } from "@/lib/constants";
-
-const iconMap = {
-  github: Github,
-  linkedin: Linkedin,
-  twitter: Twitter,
-  mail: Mail,
-};
+import { Send, CheckCircle2, AlertCircle } from "lucide-react";
+import { SOCIAL_LINKS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const validateForm = (formData: FormData) => {
+    const newErrors: { [key: string]: string } = {};
+    const email = formData.get("email") as string;
+    const name = formData.get("name") as string;
+    const message = formData.get("message") as string;
+
+    if (!name || name.length < 2) {
+      newErrors.name = "Le nom doit contenir au moins 2 caractères.";
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Veuillez entrer une adresse email valide.";
+    }
+
+    if (!message || message.length < 10) {
+      newErrors.message = "Le message doit contenir au moins 10 caractères.";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrors({});
+
+    const formData = new FormData(e.currentTarget);
+    const validationErrors = validateForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     setIsSubmitting(true);
     
     // Simulate API call
@@ -28,9 +54,6 @@ export default function ContactPage() {
     
     setIsSubmitting(false);
     setIsSuccess(true);
-    
-    // Reset success message after 3 seconds
-    setTimeout(() => setIsSuccess(false), 3000);
   };
 
   return (
@@ -46,27 +69,27 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Contact Info */}
           <div className="space-y-8">
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-lg leading-relaxed">
               Vous avez un projet en tête ou vous souhaitez simplement dire bonjour ? N&apos;hésitez pas à me contacter via le formulaire ou sur les réseaux sociaux.
             </p>
             
             <div className="space-y-4">
-              {socialLinks.map((link) => {
-                const Icon = iconMap[link.icon as keyof typeof iconMap];
-                const displayLabel = link.icon === 'mail' ? link.url.replace('mailto:', '') : link.name;
-
+              {SOCIAL_LINKS.map((link) => {
+                const Icon = link.icon;
                 return (
                   <a
                     key={link.name}
                     href={link.url}
-                    target={link.icon === 'mail' ? undefined : "_blank"}
-                    rel={link.icon === 'mail' ? undefined : "noopener noreferrer"}
-                    className="flex items-center gap-4 text-foreground hover:text-primary transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 text-foreground hover:text-primary transition-colors group"
                   >
-                    <div className="p-3 bg-secondary rounded-full">
-                      {Icon && <Icon className="h-6 w-6" />}
+                    <div className="p-3 bg-secondary rounded-full group-hover:bg-primary/10 transition-colors">
+                      <Icon className="h-6 w-6" />
                     </div>
-                    <span className="font-medium">{displayLabel}</span>
+                    <span className="font-medium">
+                      {link.name === "Email" ? link.url.replace("mailto:", "") : link.name}
+                    </span>
                   </a>
                 );
               })}
@@ -93,44 +116,62 @@ export default function ContactPage() {
                 </Button>
               </motion.div>
             ) : (
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form className="space-y-6" onSubmit={handleSubmit} noValidate>
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     Nom
                   </label>
                   <Input
+                    name="name"
                     type="text"
                     id="name"
                     placeholder="Votre nom"
-                    required
-                    minLength={2}
                     disabled={isSubmitting}
+                    className={errors.name ? "border-destructive focus-visible:ring-destructive" : ""}
                   />
+                  {errors.name && (
+                    <p className="text-xs font-medium text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" /> {errors.name}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     Email
                   </label>
                   <Input
+                    name="email"
                     type="email"
                     id="email"
                     placeholder="votre@email.com"
-                    required
                     disabled={isSubmitting}
+                    className={errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
                   />
+                  {errors.email && (
+                    <p className="text-xs font-medium text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" /> {errors.email}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="message" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     Message
                   </label>
                   <Textarea
+                    name="message"
                     id="message"
-                    placeholder="Votre message (minimum 10 caractères)..."
-                    className="min-h-[120px] resize-y"
-                    required
-                    minLength={10}
+                    placeholder="Votre message..."
+                    className={cn(
+                      "min-h-[120px] resize-y",
+                      errors.message ? "border-destructive focus-visible:ring-destructive" : ""
+                    )}
                     disabled={isSubmitting}
                   />
+                  {errors.message && (
+                    <p className="text-xs font-medium text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" /> {errors.message}
+                    </p>
+                  )}
                 </div>
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? (
