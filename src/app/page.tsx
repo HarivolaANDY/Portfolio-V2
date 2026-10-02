@@ -8,8 +8,9 @@ import { ProjectCard } from "@/components/project-card";
 import { PROJECTS } from "@/lib/constants";
 import { useRef } from "react";
 
+const FEATURED_PROJECTS = PROJECTS.filter((p) => p.featured);
+
 export default function Home() {
-  const featuredProjects = PROJECTS.filter((p) => p.featured);
   const featuredSectionRef = useRef<HTMLDivElement>(null);
 
   const scrollToFeatured = () => {
@@ -87,7 +88,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project, index) => (
+            {FEATURED_PROJECTS.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
           </div>
