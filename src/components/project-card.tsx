@@ -27,6 +27,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
             src={project.image}
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority={index < 2}
             className="object-cover transition-transform duration-300 group-hover:scale-105 p-8"
           />
