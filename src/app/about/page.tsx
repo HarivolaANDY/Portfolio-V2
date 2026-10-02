@@ -3,6 +3,7 @@
 import { SkillBar } from "@/components/skill-bar";
 import { SKILLS } from "@/lib/constants";
 import { motion } from "framer-motion";
+import { User } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -14,9 +15,8 @@ export default function AboutPage() {
         className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
       >
         <div className="relative aspect-square md:aspect-[4/5] overflow-hidden rounded-2xl bg-muted flex items-center justify-center border">
-             {/* Placeholder for profile image */}
              <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                <span className="text-8xl">👤</span>
+                <User className="w-32 h-32 stroke-[1.5]" />
              </div>
         </div>
         
