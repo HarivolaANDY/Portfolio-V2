@@ -48,10 +48,6 @@ export default function ContactPage() {
     }
 
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
     setIsSubmitting(false);
     setIsSuccess(true);
   };
