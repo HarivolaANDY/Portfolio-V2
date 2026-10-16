@@ -44,7 +44,15 @@ export default function ContactPage() {
     const formData = new FormData(e.currentTarget);
     const validationErrors = validateForm(formData);
 
-    if (Object.keys(validationErrors).length > 0) {
+    let hasErrors = false;
+    for (const key in validationErrors) {
+      if (Object.prototype.hasOwnProperty.call(validationErrors, key)) {
+        hasErrors = true;
+        break;
+      }
+    }
+
+    if (hasErrors) {
       setErrors(validationErrors);
       return;
     }
