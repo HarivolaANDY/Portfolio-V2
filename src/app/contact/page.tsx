@@ -50,8 +50,12 @@ export default function ContactPage() {
     }
 
     setIsSubmitting(true);
-    setIsSubmitting(false);
-    setIsSuccess(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setIsSuccess(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
