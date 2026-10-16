@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { sanitizeUrl } from "@/lib/utils";
 
 interface Project {
   id: number;
@@ -21,7 +22,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative overflow-hidden rounded-xl border bg-card text-card-foreground shadow transition-all hover:shadow-lg h-full flex flex-col"
     >
-      <Link href={project.link} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col">
+      <Link href={sanitizeUrl(project.link)} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col">
         <div className="relative aspect-video overflow-hidden bg-muted">
           <Image
             src={project.image}

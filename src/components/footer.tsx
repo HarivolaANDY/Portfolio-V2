@@ -1,4 +1,5 @@
 import { SOCIAL_LINKS } from "@/lib/constants";
+import { sanitizeUrl } from "@/lib/utils";
 
 export function Footer() {
   return (
@@ -13,7 +14,7 @@ export function Footer() {
             return (
               <a
                 key={link.name}
-                href={link.url}
+                href={sanitizeUrl(link.url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
