@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { SOCIAL_LINKS } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn, sanitizeUrl } from "@/lib/utils";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,7 +75,7 @@ export default function ContactPage() {
                 return (
                   <a
                     key={link.name}
-                    href={link.url}
+                    href={sanitizeUrl(link.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-4 text-foreground hover:text-primary transition-colors group"
