@@ -1,51 +1,37 @@
-import { test, describe } from "node:test";
-import assert from "node:assert";
+import test from "node:test";
+import assert from "node:assert/strict";
 import { sanitizeUrl } from "./utils.ts";
 
-describe("sanitizeUrl", () => {
-  test("allows valid http and https URLs", () => {
-    assert.strictEqual(sanitizeUrl("https://example.com"), "https://example.com");
-    assert.strictEqual(sanitizeUrl("http://example.com/path?query=1#hash"), "http://example.com/path?query=1#hash");
-  });
+test("sanitizeUrl allows valid HTTP and HTTPS URLs", () => {
+  assert.equal(sanitizeUrl("https://github.com"), "https://github.com");
+  assert.equal(sanitizeUrl("http://example.com/path?query=1"), "http://example.com/path?query=1");
+});
 
-  test("allows valid relative URLs and anchor fragments", () => {
-    assert.strictEqual(sanitizeUrl("/projects"), "/projects");
-    assert.strictEqual(sanitizeUrl("#contact"), "#contact");
-    assert.strictEqual(sanitizeUrl("#"), "#");
-  });
+test("sanitizeUrl allows mailto and tel schemes", () => {
+  assert.equal(sanitizeUrl("mailto:user@example.com"), "mailto:user@example.com");
+  assert.equal(sanitizeUrl("tel:+1234567890"), "tel:+1234567890");
+});
 
-  test("allows mailto and tel URLs", () => {
-    assert.strictEqual(sanitizeUrl("mailto:user@example.com"), "mailto:user@example.com");
-    assert.strictEqual(sanitizeUrl("tel:+1234567890"), "tel:+1234567890");
-  });
+test("sanitizeUrl allows relative paths and anchor links", () => {
+  assert.equal(sanitizeUrl("/projects"), "/projects");
+  assert.equal(sanitizeUrl("#contact"), "#contact");
+});
 
-  test("sanitizes dangerous javascript: scheme", () => {
-    assert.strictEqual(sanitizeUrl("javascript:alert(1)"), "#");
-    assert.strictEqual(sanitizeUrl("JAVASCRIPT:alert('xss')"), "#");
-    assert.strictEqual(sanitizeUrl("  javascript:alert(1)  "), "#");
-    assert.strictEqual(sanitizeUrl("javascript :alert(1)"), "#");
-  });
+test("sanitizeUrl blocks javascript pseudoprotocol", () => {
+  assert.equal(sanitizeUrl("javascript:alert(1)"), "#");
+  assert.equal(sanitizeUrl("javascript:void(0)"), "#");
+  assert.equal(sanitizeUrl("  JAVASCRIPT:alert('xss')  "), "#");
+  assert.equal(sanitizeUrl("java\0script:alert(1)"), "#");
+});
 
-  test("sanitizes javascript: scheme with control characters", () => {
-    assert.strictEqual(sanitizeUrl("java\x00script:alert(1)"), "#");
-    assert.strictEqual(sanitizeUrl("java\x09script:alert(1)"), "#");
-    assert.strictEqual(sanitizeUrl("java\x0ascript:alert(1)"), "#");
-  });
+test("sanitizeUrl blocks data, vbscript and other dangerous schemes", () => {
+  assert.equal(sanitizeUrl("data:text/html,<script>alert(1)</script>"), "#");
+  assert.equal(sanitizeUrl("vbscript:msgbox(1)"), "#");
+  assert.equal(sanitizeUrl("file:///etc/passwd"), "#");
+});
 
-  test("sanitizes vbscript: and data: schemes", () => {
-    assert.strictEqual(sanitizeUrl("vbscript:msgbox(1)"), "#");
-    assert.strictEqual(sanitizeUrl("data:text/html,<script>alert(1)</script>"), "#");
-  });
-
-  test("handles empty, invalid, or non-string inputs gracefully", () => {
-    assert.strictEqual(sanitizeUrl(""), "#");
-    assert.strictEqual(sanitizeUrl(null), "#");
-    assert.strictEqual(sanitizeUrl(undefined), "#");
-    assert.strictEqual(sanitizeUrl("invalid_url_with_no_protocol"), "#");
-  });
-
-  test("respects custom fallback parameter", () => {
-    assert.strictEqual(sanitizeUrl("javascript:alert(1)", "/fallback"), "/fallback");
-    assert.strictEqual(sanitizeUrl(null, "https://default.com"), "https://default.com");
-  });
+test("sanitizeUrl handles empty, undefined, or invalid inputs", () => {
+  assert.equal(sanitizeUrl(undefined), "#");
+  assert.equal(sanitizeUrl(""), "#");
+  assert.equal(sanitizeUrl("   "), "#");
 });

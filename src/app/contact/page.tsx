@@ -9,6 +9,8 @@ import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { SOCIAL_LINKS } from "@/lib/constants";
 import { cn, sanitizeUrl } from "@/lib/utils";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -24,7 +26,7 @@ export default function ContactPage() {
       newErrors.name = "Le nom doit contenir au moins 2 caractères.";
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email || !EMAIL_REGEX.test(email)) {
       newErrors.email = "Veuillez entrer une adresse email valide.";
     }
 
@@ -35,21 +37,33 @@ export default function ContactPage() {
     return newErrors;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
 
     const formData = new FormData(e.currentTarget);
     const validationErrors = validateForm(formData);
 
-    if (Object.keys(validationErrors).length > 0) {
+    let hasErrors = false;
+    for (const key in validationErrors) {
+      if (Object.prototype.hasOwnProperty.call(validationErrors, key)) {
+        hasErrors = true;
+        break;
+      }
+    }
+
+    if (hasErrors) {
       setErrors(validationErrors);
       return;
     }
 
     setIsSubmitting(true);
-    setIsSubmitting(false);
-    setIsSuccess(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setIsSuccess(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
