@@ -9,6 +9,8 @@ import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { SOCIAL_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -24,7 +26,7 @@ export default function ContactPage() {
       newErrors.name = "Le nom doit contenir au moins 2 caractères.";
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email || !EMAIL_REGEX.test(email)) {
       newErrors.email = "Veuillez entrer une adresse email valide.";
     }
 
