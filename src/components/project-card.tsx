@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ANIMATION_CARD_DURATION, ANIMATION_STAGGER_DELAY } from "@/lib/constants";
 
 interface Project {
   id: number;
@@ -18,7 +19,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      transition={{ duration: ANIMATION_CARD_DURATION, delay: index * ANIMATION_STAGGER_DELAY }}
       className="group relative overflow-hidden rounded-xl border bg-card text-card-foreground shadow transition-all hover:shadow-lg h-full flex flex-col"
     >
       <Link href={project.link} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col">
