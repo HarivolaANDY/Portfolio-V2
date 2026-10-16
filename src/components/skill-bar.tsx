@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ANIMATION_STAGGER_DELAY } from "@/lib/constants";
 
 interface SkillProps {
   name: string;
@@ -16,7 +17,7 @@ export function SkillBar({ skill, index }: { skill: SkillProps; index: number })
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${skill.level}%` }}
-          transition={{ duration: 1, delay: index * 0.1 }}
+          transition={{ duration: 1, delay: index * ANIMATION_STAGGER_DELAY }}
           viewport={{ once: true }}
           className="bg-primary h-2.5 rounded-full"
         />

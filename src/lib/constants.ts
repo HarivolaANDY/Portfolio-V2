@@ -64,6 +64,9 @@ export const SKILLS = [
   { name: "Framer Motion", level: 70 },
 ];
 
+export const ANIMATION_STAGGER_DELAY = 0.1;
+export const ANIMATION_CARD_DURATION = 0.5;
+
 export const SOCIAL_LINKS = [
   {
     name: "GitHub",
