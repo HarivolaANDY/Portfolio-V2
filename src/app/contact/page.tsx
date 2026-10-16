@@ -35,7 +35,7 @@ export default function ContactPage() {
     return newErrors;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
 
