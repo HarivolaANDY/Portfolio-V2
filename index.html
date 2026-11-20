@@ -10,6 +10,22 @@
       content="Portfolio professionnel présentant mes projets et compétences."
     />
     <title>Mon Portfolio - Designer &amp; Développeur</title>
+    <!-- Apply the saved theme before first paint (avoids a flash of the wrong
+         theme). Same storage key ("theme") and logic as next-themes. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var dark =
+            saved === "dark" ||
+            ((saved === null || saved === "system") &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var root = document.documentElement;
+          root.classList.toggle("dark", dark);
+          root.style.colorScheme = dark ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
