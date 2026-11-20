@@ -13,7 +13,14 @@ export function SkillBar({ skill, index }: { skill: SkillProps; index: number })
         <span className="text-base font-medium text-foreground">{skill.name}</span>
         <span className="text-sm font-medium text-muted-foreground">{skill.level}%</span>
       </div>
-      <div className="w-full bg-secondary rounded-full h-2.5 overflow-hidden">
+      <div
+        role="progressbar"
+        aria-label={skill.name}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={skill.level}
+        className="w-full bg-secondary rounded-full h-2.5 overflow-hidden"
+      >
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${skill.level}%` }}

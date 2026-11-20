@@ -1,8 +1,5 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
@@ -10,18 +7,27 @@ import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "@/lib/constants";
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const pathname = usePathname();
+  const { pathname } = useLocation();
+  // The menu is "open for" a given route, so navigating elsewhere closes it
+  // without needing an effect to reset state.
+  const [openPath, setOpenPath] = React.useState<string | null>(null);
+  const isOpen = openPath === pathname;
+  const setIsOpen = (open: boolean) => setOpenPath(open ? pathname : null);
 
-  // Close mobile menu on path change
+  // Close mobile menu with Escape
   React.useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenPath(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md" aria-label="Navigation principale">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="text-xl font-bold font-heading tracking-tight hover:text-primary transition-colors">
+        <Link to="/" className="text-xl font-bold font-heading tracking-tight hover:text-primary transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           Portfolio
         </Link>
 
@@ -30,9 +36,10 @@ export function Navbar() {
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.path}
-              href={item.path}
+              to={item.path}
+              aria-current={pathname === item.path ? "page" : undefined}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-primary relative group",
+                "text-sm font-medium transition-colors hover:text-primary relative group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 pathname === item.path
                   ? "text-primary"
                   : "text-muted-foreground"
@@ -55,12 +62,12 @@ export function Navbar() {
           <ThemeToggle />
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary rounded-md"
+            className="p-2.5 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
             aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
           >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isOpen ? <X aria-hidden="true" className="h-6 w-6" /> : <Menu aria-hidden="true" className="h-6 w-6" />}
           </button>
         </div>
       </div>
@@ -79,10 +86,11 @@ export function Navbar() {
               {NAV_ITEMS.map((item) => (
                 <Link
                   key={item.path}
-                  href={item.path}
+                  to={item.path}
                   onClick={() => setIsOpen(false)}
+                  aria-current={pathname === item.path ? "page" : undefined}
                   className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary py-2",
+                    "text-base font-medium transition-colors hover:text-primary py-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     pathname === item.path
                       ? "text-primary"
                       : "text-muted-foreground"

@@ -14,7 +14,13 @@ export function sanitizeUrl(url?: string): string {
   if (!url) return "#";
 
   // Remove control characters and trim whitespace
-  const cleaned = url.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim();
+  const cleaned = Array.from(url)
+    .filter((char) => {
+      const code = char.charCodeAt(0);
+      return code > 0x1f && (code < 0x7f || code > 0x9f);
+    })
+    .join("")
+    .trim();
   if (!cleaned) return "#";
 
   // Allow relative paths and anchor links
