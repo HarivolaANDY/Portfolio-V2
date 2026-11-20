@@ -7,9 +7,9 @@
     <meta name="color-scheme" content="light dark" />
     <meta
       name="description"
-      content="Portfolio professionnel présentant mes projets et compétences."
+      content="Andy Harivola, designer UX et développeur : projets, compétences et contact."
     />
-    <title>Mon Portfolio - Designer &amp; Développeur</title>
+    <title>Andy Harivola - Designer &amp; Développeur</title>
     <!-- Apply the saved theme before first paint (avoids a flash of the wrong
          theme). Same storage key ("theme") and logic as next-themes. -->
     <script>
@@ -21,7 +21,10 @@
             ((saved === null || saved === "system") &&
               window.matchMedia("(prefers-color-scheme: dark)").matches);
           var root = document.documentElement;
-          root.classList.toggle("dark", dark);
+          root.setAttribute(
+            "data-theme",
+            dark ? "portfolio-dark" : "portfolio-light"
+          );
           root.style.colorScheme = dark ? "dark" : "light";
         } catch (e) {}
       })();

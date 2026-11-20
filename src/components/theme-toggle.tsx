@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 const subscribeNoop = () => () => {};
@@ -17,23 +16,22 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="sm" className="w-11 h-11 px-0 rounded-full" aria-label="Changer de thème" disabled>
-        <div className="w-5 h-5" />
-      </Button>
+      <button type="button" className="btn btn-ghost btn-circle" aria-label="Changer de thème" disabled>
+        <span className="size-5" />
+      </button>
     );
   }
 
   const isDark = resolvedTheme === "dark";
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
+    <button
+      type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative w-11 h-11 px-0 rounded-full hover:bg-secondary transition-colors"
+      className="btn btn-ghost btn-circle relative"
       aria-label={isDark ? "Passer au thème clair" : "Passer au thème sombre"}
     >
-      <motion.div
+      <motion.span
         initial={false}
         animate={{
           scale: isDark ? 1 : 0,
@@ -43,9 +41,9 @@ export function ThemeToggle() {
         transition={{ duration: 0.2 }}
         className="absolute inset-0 flex items-center justify-center"
       >
-        <Moon aria-hidden="true" className="h-5 w-5" />
-      </motion.div>
-      <motion.div
+        <Moon aria-hidden="true" className="size-5" />
+      </motion.span>
+      <motion.span
         initial={false}
         animate={{
           scale: isDark ? 0 : 1,
@@ -55,8 +53,8 @@ export function ThemeToggle() {
         transition={{ duration: 0.2 }}
         className="flex items-center justify-center"
       >
-        <Sun aria-hidden="true" className="h-5 w-5" />
-      </motion.div>
-    </Button>
+        <Sun aria-hidden="true" className="size-5" />
+      </motion.span>
+    </button>
   );
 }

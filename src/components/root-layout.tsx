@@ -23,7 +23,6 @@ export function RootLayout() {
 
   return (
     <ThemeProvider
-      attribute="class"
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
@@ -31,7 +30,7 @@ export function RootLayout() {
       <div className="flex min-h-screen flex-col">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-content"
         >
           Aller au contenu principal
         </a>
@@ -47,7 +46,7 @@ export function RootLayout() {
             key={pathname}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ease: "easeInOut", duration: 0.3 }}
+            transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
           >
             <Outlet />
           </motion.div>

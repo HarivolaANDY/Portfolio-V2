@@ -4,122 +4,132 @@
 
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-:root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 40%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 72% 45%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 10% 3.9%;
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-  --radius: 0.5rem;
+/* Only our two custom themes are generated (no built-in DaisyUI themes). */
+@plugin "daisyui" {
+  themes: false;
+  logs: false;
 }
 
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 84% 68%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-  --chart-1: 220 70% 50%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
+/*
+ * Light theme: soft, restful, never pure white.
+ *   page background  base-200  #f3f5f8  (felted off-white)
+ *   surfaces/cards   base-100  #fafbfc  (a touch brighter than the page)
+ *   borders          base-300  #dfe5ec
+ *   text             base-content #1e293b (slate anthracite, never ink black)
+ * Accent: deep teal (white text on it is 5.5:1, AA for small text).
+ */
+@plugin "daisyui/theme" {
+  name: "portfolio-light";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #fafbfc;
+  --color-base-200: #f3f5f8;
+  --color-base-300: #dfe5ec;
+  --color-base-content: #1e293b;
+
+  --color-primary: #0f766e;
+  --color-primary-content: #f0fdfa;
+  --color-secondary: #5b50c9;
+  --color-secondary-content: #f5f3ff;
+  --color-accent: #3b5bdb;
+  --color-accent-content: #eef2ff;
+  --color-neutral: #1e293b;
+  --color-neutral-content: #f1f5f9;
+
+  --color-info: #0369a1;
+  --color-info-content: #f0f9ff;
+  --color-success: #15803d;
+  --color-success-content: #f0fdf4;
+  --color-warning: #b45309;
+  --color-warning-content: #fffbeb;
+  --color-error: #b91c1c;
+  --color-error-content: #fef2f2;
+
+  --radius-selector: 9999px;
+  --radius-field: 0.625rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
+
+/* Dark theme: deep slate/zinc, balanced, no OLED black. */
+@plugin "daisyui/theme" {
+  name: "portfolio-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #1f2530;
+  --color-base-200: #171c25;
+  --color-base-300: #2c3441;
+  --color-base-content: #e2e8f0;
+
+  --color-primary: #2dd4bf;
+  --color-primary-content: #042f2e;
+  --color-secondary: #a79bf7;
+  --color-secondary-content: #1e1b4b;
+  --color-accent: #8da2fb;
+  --color-accent-content: #172554;
+  --color-neutral: #2c3441;
+  --color-neutral-content: #e2e8f0;
+
+  --color-info: #38bdf8;
+  --color-info-content: #082f49;
+  --color-success: #4ade80;
+  --color-success-content: #052e16;
+  --color-warning: #fbbf24;
+  --color-warning-content: #451a03;
+  --color-error: #f87171;
+  --color-error-content: #450a0a;
+
+  --radius-selector: 9999px;
+  --radius-field: 0.625rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@custom-variant dark (&:where([data-theme="portfolio-dark"], [data-theme="portfolio-dark"] *));
 
 @theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
   --font-sans: "Open Sans Variable", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Montserrat Variable", ui-sans-serif, system-ui, sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
-  /* Tailwind v4 defaults borders to currentColor; use the design token instead */
-  *,
-  ::before,
-  ::after {
-    border-color: var(--color-border);
+  html {
+    scroll-padding-top: 5rem;
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--color-base-200);
+    color: var(--color-base-content);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-}
 
-/* Respect users who ask for less motion (infinite/decorative animations) */
-@media (prefers-reduced-motion: reduce) {
-  .animate-bounce {
-    animation: none;
+  /* Browser surfaces themed from the palette */
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-primary) 28%, transparent);
+    color: var(--color-base-content);
   }
-}
 
-/* Custom classes for transitions */
-.transition-colors {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  html {
+    scrollbar-color: var(--color-base-300) transparent;
+  }
 }
