@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,23 +35,21 @@ export default function ContactPage() {
     return newErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
 
     const formData = new FormData(e.currentTarget);
     const validationErrors = validateForm(formData);
 
-    let hasErrors = false;
-    for (const key in validationErrors) {
-      if (Object.prototype.hasOwnProperty.call(validationErrors, key)) {
-        hasErrors = true;
-        break;
-      }
-    }
+    const firstInvalid = (["name", "email", "message"] as const).find(
+      (field) => validationErrors[field]
+    );
 
-    if (hasErrors) {
+    if (firstInvalid) {
       setErrors(validationErrors);
+      // Move focus to the first invalid field so keyboard/screen reader users land on the problem
+      e.currentTarget.querySelector<HTMLElement>(`#${firstInvalid}`)?.focus();
       return;
     }
 
@@ -90,12 +86,13 @@ export default function ContactPage() {
                   <a
                     key={link.name}
                     href={sanitizeUrl(link.url)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 text-foreground hover:text-primary transition-colors group"
+                    {...(link.url.startsWith("http")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className="flex items-center gap-4 rounded-full text-foreground hover:text-primary transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     <div className="p-3 bg-secondary rounded-full group-hover:bg-primary/10 transition-colors">
-                      <Icon className="h-6 w-6" />
+                      <Icon aria-hidden="true" className="h-6 w-6" />
                     </div>
                     <span className="font-medium">
                       {link.name === "Email" ? link.url.replace("mailto:", "") : link.name}
@@ -110,6 +107,7 @@ export default function ContactPage() {
           <div className="bg-card border rounded-2xl p-8 shadow-sm">
             {isSuccess ? (
               <motion.div
+                role="status"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12"
@@ -136,12 +134,15 @@ export default function ContactPage() {
                     type="text"
                     id="name"
                     placeholder="Votre nom"
+                    autoComplete="name"
                     disabled={isSubmitting}
+                    aria-invalid={errors.name ? true : undefined}
+                    aria-describedby={errors.name ? "name-error" : undefined}
                     className={errors.name ? "border-destructive focus-visible:ring-destructive" : ""}
                   />
                   {errors.name && (
-                    <p className="text-xs font-medium text-destructive flex items-center gap-1">
-                      <AlertCircle className="h-3 w-3" /> {errors.name}
+                    <p id="name-error" role="alert" className="text-sm font-medium text-destructive flex items-center gap-1.5">
+                      <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0" /> {errors.name}
                     </p>
                   )}
                 </div>
@@ -154,12 +155,15 @@ export default function ContactPage() {
                     type="email"
                     id="email"
                     placeholder="votre@email.com"
+                    autoComplete="email"
                     disabled={isSubmitting}
+                    aria-invalid={errors.email ? true : undefined}
+                    aria-describedby={errors.email ? "email-error" : undefined}
                     className={errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
                   />
                   {errors.email && (
-                    <p className="text-xs font-medium text-destructive flex items-center gap-1">
-                      <AlertCircle className="h-3 w-3" /> {errors.email}
+                    <p id="email-error" role="alert" className="text-sm font-medium text-destructive flex items-center gap-1.5">
+                      <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0" /> {errors.email}
                     </p>
                   )}
                 </div>
@@ -176,10 +180,12 @@ export default function ContactPage() {
                       errors.message ? "border-destructive focus-visible:ring-destructive" : ""
                     )}
                     disabled={isSubmitting}
+                    aria-invalid={errors.message ? true : undefined}
+                    aria-describedby={errors.message ? "message-error" : undefined}
                   />
                   {errors.message && (
-                    <p className="text-xs font-medium text-destructive flex items-center gap-1">
-                      <AlertCircle className="h-3 w-3" /> {errors.message}
+                    <p id="message-error" role="alert" className="text-sm font-medium text-destructive flex items-center gap-1.5">
+                      <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0" /> {errors.message}
                     </p>
                   )}
                 </div>

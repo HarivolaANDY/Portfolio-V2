@@ -1,5 +1,3 @@
-"use client";
-
 import { SkillBar } from "@/components/skill-bar";
 import { SKILLS } from "@/lib/constants";
 import { motion } from "framer-motion";

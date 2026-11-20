@@ -1,8 +1,6 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { ProjectCard } from "@/components/project-card";
 import { PROJECTS } from "@/lib/constants";
@@ -14,20 +12,23 @@ export default function Home() {
   const featuredSectionRef = useRef<HTMLDivElement>(null);
 
   const scrollToFeatured = () => {
-    featuredSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    featuredSectionRef.current?.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
   };
 
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4 text-center space-y-8 relative">
+      <section className="flex flex-col items-center justify-center min-h-[calc(100dvh-4rem)] px-4 pt-16 pb-28 text-center space-y-8 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="space-y-4 max-w-3xl"
         >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-heading tracking-tighter">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-heading tracking-tight text-balance">
             Créer des expériences numériques <span className="text-primary">uniques</span>
           </h1>
           <p className="text-xl text-muted-foreground md:text-2xl font-light">
@@ -41,16 +42,12 @@ export default function Home() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex flex-col sm:flex-row gap-4"
         >
-          <Link href="/projects">
-            <Button size="lg" className="group h-12 px-8">
-              Voir mon travail
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
+          <Link to="/projects" className={buttonVariants({ size: "lg", className: "group h-12 px-8" })}>
+            Voir mon travail
+            <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-          <Link href="/contact">
-            <Button variant="outline" size="lg" className="h-12 px-8">
-              Me contacter
-            </Button>
+          <Link to="/contact" className={buttonVariants({ variant: "outline", size: "lg", className: "h-12 px-8" })}>
+            Me contacter
           </Link>
         </motion.div>
 
@@ -59,10 +56,10 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
           onClick={scrollToFeatured}
-          className="absolute bottom-8 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
+          className="absolute bottom-8 flex flex-col items-center gap-2 rounded-md p-2 text-muted-foreground hover:text-primary transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span className="text-sm font-medium">Scroll pour découvrir</span>
-          <ChevronDown className="h-5 w-5 animate-bounce group-hover:translate-y-1 transition-transform" />
+          <span className="text-sm font-medium">Faire défiler pour découvrir</span>
+          <ChevronDown aria-hidden="true" className="h-5 w-5 animate-bounce group-hover:translate-y-1 transition-transform" />
         </motion.button>
       </section>
 
@@ -79,11 +76,9 @@ export default function Home() {
                 Une sélection de mes travaux les plus récents et les plus stimulants.
               </p>
             </div>
-            <Link href="/projects">
-              <Button variant="ghost" className="group">
-                Tous les projets
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
+            <Link to="/projects" className={buttonVariants({ variant: "ghost", className: "group" })}>
+              Tous les projets
+              <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
@@ -97,15 +92,13 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="w-full py-24 px-4 text-center">
-        <div className="max-w-3xl mx-auto space-y-8 bg-card border rounded-3xl p-12 shadow-sm">
+        <div className="max-w-3xl mx-auto space-y-8 bg-card border rounded-3xl p-8 md:p-12 shadow-sm">
           <h2 className="text-3xl md:text-4xl font-bold font-heading">Prêt à démarrer un projet ?</h2>
           <p className="text-xl text-muted-foreground font-light">
             Je suis toujours à la recherche de nouvelles opportunités et de collaborations passionnantes.
           </p>
-          <Link href="/contact">
-            <Button size="lg" className="h-12 px-10 text-lg">
-              Travaillons ensemble
-            </Button>
+          <Link to="/contact" className={buttonVariants({ size: "lg", className: "h-12 px-10 text-lg" })}>
+            Travaillons ensemble
           </Link>
         </div>
       </section>
