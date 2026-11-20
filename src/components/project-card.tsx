@@ -1,19 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ANIMATION_CARD_DURATION, ANIMATION_STAGGER_DELAY } from "@/lib/constants";
+import { ArrowUpRight } from "lucide-react";
+import { ANIMATION_CARD_DURATION, ANIMATION_STAGGER_DELAY, type Project } from "@/lib/constants";
 import { sanitizeUrl } from "@/lib/utils";
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  link: string;
-  tags: string[];
-}
+import { ProjectVisual } from "@/components/project-visual";
 
 const LINK_CLASS =
-  "flex-1 flex flex-col rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "card h-full rounded-box focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
 
 export function ProjectCard({ project, index }: { project: Project; index: number }) {
   const safeLink = sanitizeUrl(project.link);
@@ -22,56 +15,58 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
 
   const content = (
     <>
-      <div className="relative aspect-video overflow-hidden bg-muted">
-        <img
-          src={project.image}
-          alt=""
-          loading={index < 2 ? "eager" : "lazy"}
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 p-8"
+      <div className="relative overflow-hidden rounded-t-box border-b border-base-300">
+        <ProjectVisual
+          kind={project.visual}
+          className="transition-transform duration-500 ease-out-expo group-hover:scale-[1.04] group-focus-visible:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         />
-        <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 flex items-center justify-center">
-          <span className="text-white font-semibold text-lg">Voir le projet</span>
-        </div>
+        {/* Frosted badge: replaces the old black hover mask */}
+        <span className="badge absolute bottom-3 right-3 translate-y-1 gap-1 border-base-100/60 bg-base-100/65 text-base-content opacity-0 shadow-sm backdrop-blur-md transition-all duration-300 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 motion-reduce:transition-none">
+          Voir le projet
+          <ArrowUpRight aria-hidden="true" className="size-3.5" />
+        </span>
       </div>
-      <div className="p-4 flex flex-col flex-1">
-        <h3 className="text-xl font-bold font-heading mb-2">{project.title}</h3>
-        <p className="text-sm text-muted-foreground mb-4 flex-1">{project.description}</p>
-        <div className="flex flex-wrap gap-2 mt-auto">
+      <div className="card-body gap-3 p-5">
+        <h3 className="card-title font-heading text-xl">{project.title}</h3>
+        <p className="flex-1 text-sm leading-relaxed text-base-content/70">{project.description}</p>
+        <ul className="mt-1 flex flex-wrap gap-2" aria-label="Technologies">
           {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors text-foreground bg-secondary/50"
-            >
+            <li key={tag} className="badge badge-outline badge-sm font-medium">
               {tag}
-            </span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </>
   );
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: ANIMATION_CARD_DURATION, delay: (index % 3) * ANIMATION_STAGGER_DELAY }}
-      className="group relative overflow-hidden rounded-xl border bg-card text-card-foreground shadow transition-shadow hover:shadow-lg focus-within:shadow-lg h-full flex flex-col"
+      transition={{
+        duration: ANIMATION_CARD_DURATION,
+        delay: (index % 3) * ANIMATION_STAGGER_DELAY,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      className="h-full"
     >
-      {isInternalRoute ? (
-        <Link to={safeLink} className={LINK_CLASS}>
-          {content}
-        </Link>
-      ) : (
-        <a
-          href={safeLink}
-          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className={LINK_CLASS}
-        >
-          {content}
-        </a>
-      )}
-    </motion.div>
+      <div className="group h-full rounded-box border border-base-300 bg-base-100 shadow-sm transition-[transform,box-shadow] duration-300 ease-out-expo hover:-translate-y-1 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+        {isInternalRoute ? (
+          <Link to={safeLink} className={LINK_CLASS}>
+            {content}
+          </Link>
+        ) : (
+          <a
+            href={safeLink}
+            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className={LINK_CLASS}
+          >
+            {content}
+          </a>
+        )}
+      </div>
+    </motion.article>
   );
 }

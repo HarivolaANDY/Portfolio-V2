@@ -1,31 +1,32 @@
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { PROFILE, SOCIAL_LINKS } from "@/lib/constants";
 import { sanitizeUrl } from "@/lib/utils";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-background py-8 mt-auto">
-      <div className="container mx-auto px-4 flex flex-col items-center justify-between gap-4 md:flex-row">
-        <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Mon Portfolio. Tous droits réservés.
+    <footer className="border-t border-base-300 bg-base-100 py-8">
+      <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 md:flex-row">
+        <p className="text-sm text-base-content/70">
+          © {new Date().getFullYear()} {PROFILE.name}. Tous droits réservés.
         </p>
-        <div className="flex gap-6">
+        <ul className="flex gap-1">
           {SOCIAL_LINKS.map((link) => {
             const Icon = link.icon;
             return (
-              <a
-                key={link.name}
-                href={sanitizeUrl(link.url)}
-                {...(link.url.startsWith("http")
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-                className="inline-flex items-center justify-center h-11 w-11 rounded-md text-muted-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <Icon className="h-5 w-5" />
-                <span className="sr-only">{link.name}</span>
-              </a>
+              <li key={link.name}>
+                <a
+                  href={sanitizeUrl(link.url)}
+                  {...(link.url.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className="btn btn-ghost btn-circle text-base-content/70 hover:text-primary"
+                >
+                  <Icon aria-hidden="true" className="size-5" />
+                  <span className="sr-only">{link.name}</span>
+                </a>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </footer>
   );
