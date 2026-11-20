@@ -1,26 +1,37 @@
-import { SkillBar } from "@/components/skill-bar";
-import { SKILLS } from "@/lib/constants";
 import { motion } from "framer-motion";
-import { User } from "lucide-react";
+import { SkillGroups } from "@/components/skill-groups";
+import { PROFILE } from "@/lib/constants";
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto space-y-20 px-4 py-16">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="grid grid-cols-1 items-center gap-12 md:grid-cols-2"
       >
-        <div className="relative aspect-square md:aspect-[4/5] overflow-hidden rounded-2xl bg-muted flex items-center justify-center border">
-             <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                <User className="w-32 h-32 stroke-[1.5]" />
-             </div>
+        {/* Stylised avatar: DaisyUI avatar-placeholder on a soft themed panel */}
+        <div
+          aria-hidden="true"
+          className="relative flex aspect-square items-center justify-center overflow-hidden rounded-box border border-base-300 bg-linear-to-br from-primary/20 via-accent/10 to-secondary/20 shadow-sm md:aspect-[4/5]"
+        >
+          <div className="avatar avatar-placeholder">
+            <div className="w-40 rounded-full bg-primary text-primary-content shadow-md ring-4 ring-base-100 md:w-48">
+              <span className="font-heading text-5xl font-bold md:text-6xl">{PROFILE.initials}</span>
+            </div>
+          </div>
+          <span className="badge badge-soft badge-primary absolute left-5 top-5 bg-base-100/70 backdrop-blur-sm">
+            Designer UX
+          </span>
+          <span className="badge badge-soft badge-secondary absolute bottom-6 right-5 bg-base-100/70 backdrop-blur-sm">
+            Développeur front-end
+          </span>
         </div>
-        
+
         <div>
-          <h1 className="text-4xl font-bold font-heading mb-6">À propos de moi</h1>
-          <div className="space-y-4 text-muted-foreground mb-8 text-lg leading-relaxed">
+          <h1 className="mb-6 font-heading text-4xl font-bold">À propos de moi</h1>
+          <div className="space-y-4 text-lg leading-relaxed text-base-content/75">
             <p>
               Je suis un développeur passionné avec plus de 5 ans d&apos;expérience dans la création d&apos;applications web modernes et performantes.
             </p>
@@ -31,15 +42,18 @@ export default function AboutPage() {
               Quand je ne code pas, j&apos;explore les dernières tendances du design, je contribue à des projets open source ou je partage mes connaissances via des articles techniques.
             </p>
           </div>
-
-          <h2 className="text-2xl font-bold font-heading mb-6">Compétences techniques</h2>
-          <div className="space-y-2">
-            {SKILLS.map((skill, index) => (
-              <SkillBar key={skill.name} skill={skill} index={index} />
-            ))}
-          </div>
         </div>
       </motion.div>
+
+      <section aria-labelledby="skills-title">
+        <h2 id="skills-title" className="mb-3 font-heading text-3xl font-bold">
+          Compétences techniques
+        </h2>
+        <p className="mb-8 max-w-2xl text-lg text-base-content/70">
+          Les technologies avec lesquelles je travaille, classées par domaine et par niveau d&apos;usage.
+        </p>
+        <SkillGroups />
+      </section>
     </div>
   );
 }

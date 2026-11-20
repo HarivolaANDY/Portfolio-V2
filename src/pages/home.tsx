@@ -1,15 +1,15 @@
-import { buttonVariants } from "@/components/ui/button-variants";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { ProjectCard } from "@/components/project-card";
-import { PROJECTS } from "@/lib/constants";
+import { PROFILE, PROJECTS } from "@/lib/constants";
 import { useRef } from "react";
 
 const FEATURED_PROJECTS = PROJECTS.filter((p) => p.featured);
+const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
 export default function Home() {
-  const featuredSectionRef = useRef<HTMLDivElement>(null);
+  const featuredSectionRef = useRef<HTMLElement>(null);
 
   const scrollToFeatured = () => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -21,68 +21,88 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center min-h-[calc(100dvh-4rem)] px-4 pt-16 pb-28 text-center space-y-8 relative">
+      <section className="relative flex min-h-[calc(100dvh-4rem)] w-full flex-col items-center justify-center space-y-8 px-4 pb-24 pt-16 text-center md:pb-28">
+        {/* Soft light wash behind the headline (decorative) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_55%_at_50%_0%,color-mix(in_oklab,var(--color-primary)_14%,transparent),transparent_70%)]"
+        />
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-4 max-w-3xl"
+          transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
+          className="max-w-3xl space-y-5"
         >
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-heading tracking-tight text-balance">
-            Créer des expériences numériques <span className="text-primary">uniques</span>
+          <h1 className="font-heading text-4xl font-bold tracking-tight text-balance md:text-6xl lg:text-7xl">
+            Créer des expériences numériques{" "}
+            <span className="rounded-md bg-[linear-gradient(transparent_62%,color-mix(in_oklab,var(--color-primary)_24%,transparent)_62%)] text-primary">
+              uniques
+            </span>
           </h1>
-          <p className="text-xl text-muted-foreground md:text-2xl font-light">
-            Je suis Alex, un designer UX et développeur passionné par la création d&apos;interfaces intuitives, élégantes et performantes.
+          <p className="mx-auto max-w-2xl text-lg font-light leading-relaxed text-base-content/75 md:text-2xl">
+            Je suis {PROFILE.name}, designer UX et développeur passionné par la création d&apos;interfaces intuitives, élégantes et performantes.
           </p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-col sm:flex-row gap-4"
+          transition={{ duration: 0.6, delay: 0.15, ease: EASE_OUT_EXPO }}
+          className="flex flex-col gap-3 sm:flex-row sm:gap-4"
         >
-          <Link to="/projects" className={buttonVariants({ size: "lg", className: "group h-12 px-8" })}>
+          <Link to="/projects" className="btn btn-primary btn-lg group px-8">
             Voir mon travail
-            <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1" />
           </Link>
-          <Link to="/contact" className={buttonVariants({ variant: "outline", size: "lg", className: "h-12 px-8" })}>
+          <Link to="/contact" className="btn btn-outline btn-lg px-8">
             Me contacter
           </Link>
         </motion.div>
 
+        {/* Hidden on small or short screens so it can never sit on top of the CTAs */}
         <motion.button
+          type="button"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
+          transition={{ duration: 1, delay: 0.6 }}
           onClick={scrollToFeatured}
-          className="absolute bottom-8 flex flex-col items-center gap-2 rounded-md p-2 text-muted-foreground hover:text-primary transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="absolute bottom-6 hidden flex-col items-center gap-1 rounded-full px-3 py-2 text-base-content/70 transition-colors hover:text-primary md:flex [@media(max-height:720px)]:hidden"
         >
           <span className="text-sm font-medium">Faire défiler pour découvrir</span>
-          <ChevronDown aria-hidden="true" className="h-5 w-5 animate-bounce group-hover:translate-y-1 transition-transform" />
+          <motion.span
+            aria-hidden="true"
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="size-5" />
+          </motion.span>
         </motion.button>
       </section>
 
       {/* Featured Projects Section */}
       <section
         ref={featuredSectionRef}
-        className="w-full py-24 bg-secondary/30"
+        className="w-full border-y border-base-300 bg-base-100 py-24"
+        aria-labelledby="featured-title"
       >
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+          <div className="mb-12 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
             <div className="max-w-2xl">
-              <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">Projets à la une</h2>
-              <p className="text-muted-foreground text-lg">
+              <h2 id="featured-title" className="mb-3 font-heading text-3xl font-bold md:text-4xl">
+                Projets à la une
+              </h2>
+              <p className="text-lg text-base-content/70">
                 Une sélection de mes travaux les plus récents et les plus stimulants.
               </p>
             </div>
-            <Link to="/projects" className={buttonVariants({ variant: "ghost", className: "group" })}>
+            <Link to="/projects" className="btn btn-ghost group">
               Tous les projets
-              <ArrowRight aria-hidden="true" className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {FEATURED_PROJECTS.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
@@ -91,13 +111,13 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="w-full py-24 px-4 text-center">
-        <div className="max-w-3xl mx-auto space-y-8 bg-card border rounded-3xl p-8 md:p-12 shadow-sm">
-          <h2 className="text-3xl md:text-4xl font-bold font-heading">Prêt à démarrer un projet ?</h2>
-          <p className="text-xl text-muted-foreground font-light">
+      <section className="w-full px-4 py-24 text-center">
+        <div className="mx-auto max-w-3xl space-y-6 rounded-box border border-base-300 bg-base-100 p-8 shadow-sm md:p-12">
+          <h2 className="font-heading text-3xl font-bold text-balance md:text-4xl">Prêt à démarrer un projet ?</h2>
+          <p className="text-lg font-light text-base-content/75 md:text-xl">
             Je suis toujours à la recherche de nouvelles opportunités et de collaborations passionnantes.
           </p>
-          <Link to="/contact" className={buttonVariants({ size: "lg", className: "h-12 px-10 text-lg" })}>
+          <Link to="/contact" className="btn btn-primary btn-lg px-10">
             Travaillons ensemble
           </Link>
         </div>
